@@ -7,27 +7,36 @@ const bodyParser= require('body-parser');
 const cookieParser= require('cookie-parser');
 const cors= require('cors');
 const hpp= require('hpp')
-const helmet= require('helmet')
+const helmet= require('helmet');
 const mongooseSanitize= require('express-mongo-sanitize')
+const validator = require('validator');
+const rateLimit = require('express-rate-limit');
+const rateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100, 
+    message: 'Too many requests from this IP, please try again later.',
+  });
 
-
+ // Usage rateLimit
+ app.use(rateLimiter);
+ // Usage bodyParser 
 app.use(bodyParser.json());
-// application cookieParser
+// Usage cookieParser
 app.use(cookieParser());
-// application cors
+// Usage cors
 app.use(cors());
-// application hpp
+// Usage hpp
 app.use(hpp());
-// application mongoose
+// Usage mongoose
 app.use(mongooseSanitize());
-// application helmet
+// Usage helmet
 app.use(helmet());
 
-// application route
+// Usage route
 app.use('/api',router);
 
 // undefine route
-app.use((req,res,next)=>{
+app.use((req,res)=>{
     res.status(404).send('404 not found');
 })
 
